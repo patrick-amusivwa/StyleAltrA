@@ -10,12 +10,14 @@ import { itemType } from "../../context/cart/cart-types";
 import { useCart } from "../../context/cart/CartProvider";
 import { useWishlist } from "../../context/wishlist/WishlistProvider";
 import { formatKes } from "../Util/utilFunc";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {
   item: itemType;
+  imagePlaceholder?: boolean;
 };
 
-const Card: FC<Props> = ({ item }) => {
+const Card: FC<Props> = ({ item, imagePlaceholder = false }) => {
   const t = useTranslations("CartWishlist");
   const { wishlist, addToWishlist, deleteWishlistItem } = useWishlist();
   const { addOne } = useCart();
@@ -36,33 +38,39 @@ const Card: FC<Props> = ({ item }) => {
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
-        <Link href={itemLink}>
-          <a
-            tabIndex={-1}
-            onMouseOver={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {!isHovered && (
-              <Image
-                src={img1 as string}
-                alt={name}
-                width={230}
-                height={300}
-                layout="responsive"
-              />
-            )}
-            {isHovered && (
-              <Image
-                className="transition-transform transform hover:scale-110 duration-1000"
-                src={img2 as string}
-                alt={name}
-                width={230}
-                height={300}
-                layout="responsive"
-              />
-            )}
-          </a>
-        </Link>
+        {imagePlaceholder ? (
+          <div className="w-full aspect-[230/300]">
+            <Skeleton height="100%" width="100%" />
+          </div>
+        ) : (
+          <Link href={itemLink}>
+            <a
+              tabIndex={-1}
+              onMouseOver={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              {!isHovered && (
+                <Image
+                  src={img1 as string}
+                  alt={name}
+                  width={230}
+                  height={300}
+                  layout="responsive"
+                />
+              )}
+              {isHovered && (
+                <Image
+                  className="transition-transform transform hover:scale-110 duration-1000"
+                  src={img2 as string}
+                  alt={name}
+                  width={230}
+                  height={300}
+                  layout="responsive"
+                />
+              )}
+            </a>
+          </Link>
+        )}
         <button
           type="button"
           className="absolute top-2 right-2 p-1 rounded-full"

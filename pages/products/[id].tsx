@@ -166,6 +166,9 @@ const Product: React.FC<Props> = ({ product, products }) => {
           </div>
           <div className="infoSection w-full md:w-1/2 h-auto py-8 sm:pl-4 flex flex-col">
             <h1 className="text-3xl mb-4">{product.name}</h1>
+            <div className="border border-gray300 bg-gray100 px-4 py-3 mb-4 text-gray500">
+              {t("products_coming_soon")}
+            </div>
             <span className="text-2xl text-gray400 mb-2">
               {formatKes(product.price)}
             </span>

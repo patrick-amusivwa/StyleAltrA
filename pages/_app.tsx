@@ -10,6 +10,7 @@ import { ProvideAuth } from "../context/AuthContext";
 import "../styles/globals.css";
 import "animate.css";
 import "nprogress/nprogress.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // Import Swiper styles
 import "swiper/swiper.min.css";
