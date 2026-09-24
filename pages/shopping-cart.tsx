@@ -9,7 +9,8 @@ import LeftArrow from "../public/icons/LeftArrow";
 import Button from "../components/Buttons/Button";
 import GhostButton from "../components/Buttons/GhostButton";
 import { GetStaticProps } from "next";
-import { roundDecimal } from "../components/Util/utilFunc";
+import { formatKes } from "../components/Util/utilFunc";
+import { siteConfig } from "../data/siteConfig";
 import { useCart } from "../context/cart/CartProvider";
 import { useRouter } from "next/router";
 
@@ -24,16 +25,16 @@ const ShoppingCart = () => {
   let subtotal = 0;
 
   let deliFee = 0;
-  if (deli === "Yangon") {
-    deliFee = 2.0;
-  } else if (deli === "Others") {
-    deliFee = 7.0;
+  if (deli === "Nairobi") {
+    deliFee = siteConfig.delivery.nairobi;
+  } else if (deli === "Outside Nairobi") {
+    deliFee = siteConfig.delivery.outsideNairobi;
   }
 
   return (
     <div>
       {/* ===== Head Section ===== */}
-      <Header title={`Shopping Cart - Haru Fashion`} />
+      <Header title={`Shopping Cart - StyleAltra`} />
 
       <main id="main-content">
         {/* ===== Heading & Continue Shopping */}
@@ -102,7 +103,7 @@ const ShoppingCart = () => {
                           <span>{item.name}</span>
                         </td>
                         <td className="text-right text-gray400 hidden sm:table-cell">
-                          $ {roundDecimal(item.price)}
+                          {formatKes(item.price)}
                         </td>
                         <td>
                           <div className="w-12 h-32 sm:h-auto sm:w-3/4 md:w-2/6 mx-auto flex flex-col-reverse sm:flex-row border border-gray300 sm:divide-x-2 divide-gray300">
@@ -124,10 +125,10 @@ const ShoppingCart = () => {
                           </div>
                         </td>
                         <td className="text-right text-gray400">
-                          $ {roundDecimal(item.price * item.qty!)}
+                          {formatKes(item.price * item.qty!)}
                           <br />
                           <span className="text-xs">
-                            ($ {roundDecimal(item.price)})
+                            ({formatKes(item.price)})
                           </span>
                         </td>
                         <td className="text-right" style={{ minWidth: "3rem" }}>
@@ -160,7 +161,7 @@ const ShoppingCart = () => {
               <h2 className="text-xl mb-3">{t("cart_totals")}</h2>
               <div className="flex justify-between py-2">
                 <span className="uppercase">{t("subtotal")}</span>
-                <span>$ {roundDecimal(subtotal)}</span>
+                <span>{formatKes(subtotal)}</span>
               </div>
               <div className="py-3">
                 <span className="uppercase">{t("delivery")}</span>
@@ -186,39 +187,39 @@ const ShoppingCart = () => {
                       <input
                         type="radio"
                         name="deli"
-                        value="Yangon"
-                        id="ygn"
-                        checked={deli === "Yangon"}
-                        onChange={() => setDeli("Yangon")}
+                        value="Nairobi"
+                        id="nairobi"
+                        checked={deli === "Nairobi"}
+                        onChange={() => setDeli("Nairobi")}
                         // defaultChecked
                       />{" "}
-                      <label htmlFor="ygn" className="cursor-pointer">
-                        {t("within_yangon")}
+                        <label htmlFor="nairobi" className="cursor-pointer">
+                          {t("within_nairobi")}
                       </label>
                     </div>
-                    <span>$ 2.00</span>
+                    <span>{formatKes(siteConfig.delivery.nairobi)}</span>
                   </div>
                   <div className="flex justify-between">
                     <div>
                       <input
                         type="radio"
                         name="deli"
-                        value="Others"
+                        value="Outside Nairobi"
                         id="others"
-                        checked={deli === "Others"}
-                        onChange={() => setDeli("Others")}
+                        checked={deli === "Outside Nairobi"}
+                        onChange={() => setDeli("Outside Nairobi")}
                       />{" "}
                       <label htmlFor="others" className="cursor-pointer">
-                        {t("other_cities")}
+                        {t("outside_nairobi")}
                       </label>
                     </div>
-                    <span>$ 7.00</span>
+                    <span>{formatKes(siteConfig.delivery.outsideNairobi)}</span>
                   </div>
                 </div>
               </div>
               <div className="flex justify-between py-3">
                 <span>{t("grand_total")}</span>
-                <span>$ {roundDecimal(subtotal + deliFee)}</span>
+                <span>{formatKes(subtotal + deliFee)}</span>
               </div>
               <Button
                 value={t("proceed_to_checkout")}

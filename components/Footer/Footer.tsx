@@ -6,6 +6,7 @@ import InstagramLogo from "../../public/icons/InstagramLogo";
 import Button from "../Buttons/Button";
 import Input from "../Input/Input";
 import styles from "./Footer.module.css";
+import { siteConfig } from "../../data/siteConfig";
 
 export default function Footer() {
   const t = useTranslations("Navigation");
@@ -83,20 +84,24 @@ export default function Footer() {
       </div>
       <div className={styles.bottomFooter}>
         <div className="app-max-width app-x-padding w-full flex justify-between">
-          <span className="">@2022 Haru. {t("all_rights_reserved")}</span>
+          <span className="">
+            © {new Date().getFullYear()} {siteConfig.name}. {t("all_rights_reserved")}
+            <br />
+            {siteConfig.designerCredit}
+          </span>
           <span className="flex items-center">
             <span className="hidden sm:block">
               {t("follow_us_on_social_media")}:
             </span>{" "}
             <a
               href="www.facebook.com"
-              aria-label="Facebook Page for Haru Fashion"
+              aria-label="StyleAltra Facebook Page"
             >
               <FacebookLogo />
             </a>
             <a
               href="www.ig.com"
-              aria-label="Instagram Account for Haru Fashion"
+              aria-label="StyleAltra Instagram Account"
             >
               <InstagramLogo />
             </a>

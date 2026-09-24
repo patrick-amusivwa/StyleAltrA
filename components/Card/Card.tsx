@@ -9,6 +9,7 @@ import HeartSolid from "../../public/icons/HeartSolid";
 import { itemType } from "../../context/cart/cart-types";
 import { useCart } from "../../context/cart/CartProvider";
 import { useWishlist } from "../../context/wishlist/WishlistProvider";
+import { formatKes } from "../Util/utilFunc";
 
 type Props = {
   item: itemType;
@@ -85,7 +86,7 @@ const Card: FC<Props> = ({ item }) => {
         <Link href={itemLink}>
           <a className={styles.itemName}>{name}</a>
         </Link>
-        <div className="text-gray400">$ {price}</div>
+        <div className="text-gray400">{formatKes(price)}</div>
         <button
           type="button"
           onClick={() => addOne!(item)}

@@ -29,6 +29,7 @@ import {
 import { useWishlist } from "../../context/wishlist/WishlistProvider";
 import { useCart } from "../../context/cart/CartProvider";
 import HeartSolid from "../../public/icons/HeartSolid";
+import { formatKes } from "../../components/Util/utilFunc";
 
 // install Swiper modules
 SwiperCore.use([Pagination]);
@@ -74,7 +75,7 @@ const Product: React.FC<Props> = ({ product, products }) => {
   return (
     <div>
       {/* ===== Head Section ===== */}
-      <Header title={`${product.name} - Haru Fashion`} />
+      <Header title={`${product.name} - StyleAltra`} />
 
       <main id="main-content">
         {/* ===== Breadcrumb Section ===== */}
@@ -166,7 +167,7 @@ const Product: React.FC<Props> = ({ product, products }) => {
           <div className="infoSection w-full md:w-1/2 h-auto py-8 sm:pl-4 flex flex-col">
             <h1 className="text-3xl mb-4">{product.name}</h1>
             <span className="text-2xl text-gray400 mb-2">
-              $ {product.price}
+              {formatKes(product.price)}
             </span>
             <span className="mb-2 text-justify">{product.description}</span>
             <span className="mb-2">

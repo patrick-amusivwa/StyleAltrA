@@ -6,15 +6,16 @@ import { GetStaticProps } from "next";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import Button from "../components/Buttons/Button";
-import { roundDecimal } from "../components/Util/utilFunc";
+import { formatKes, roundDecimal } from "../components/Util/utilFunc";
+import { siteConfig } from "../data/siteConfig";
 import { useCart } from "../context/cart/CartProvider";
 import Input from "../components/Input/Input";
 import { itemType } from "../context/wishlist/wishlist-type";
 import { useAuth } from "../context/AuthContext";
 
 // let w = window.innerWidth;
-type PaymentType = "CASH_ON_DELIVERY" | "BANK_TRANSFER";
-type DeliveryType = "STORE_PICKUP" | "YANGON" | "OTHERS";
+type PaymentType = "CASH_ON_DELIVERY" | "MPESA";
+type DeliveryType = "STORE_PICKUP" | "NAIROBI" | "OUTSIDE_NAIROBI";
 
 type Order = {
   orderNumber: number;
@@ -146,16 +147,16 @@ const ShoppingCart = () => {
   );
 
   let deliFee = 0;
-  if (deli === "YANGON") {
-    deliFee = 2.0;
-  } else if (deli === "OTHERS") {
-    deliFee = 7.0;
+  if (deli === "NAIROBI") {
+    deliFee = siteConfig.delivery.nairobi;
+  } else if (deli === "OUTSIDE_NAIROBI") {
+    deliFee = siteConfig.delivery.outsideNairobi;
   }
 
   return (
     <div>
       {/* ===== Head Section ===== */}
-      <Header title={`Shopping Cart - Haru Fashion`} />
+      <Header title={`Checkout - StyleAltra`} />
 
       <main id="main-content">
         {/* ===== Heading & Continue Shopping */}
@@ -326,7 +327,7 @@ const ShoppingCart = () => {
                         <span className="text-gray400">x {item.qty}</span>
                       </span>
                       <span className="text-base">
-                        $ {roundDecimal(item.price * item!.qty!)}
+                        {formatKes(item.price * item!.qty!)}
                       </span>
                     </div>
                   ))}
@@ -334,7 +335,7 @@ const ShoppingCart = () => {
 
                 <div className="py-3 flex justify-between">
                   <span className="uppercase">{t("subtotal")}</span>
-                  <span>$ {subtotal}</span>
+                  <span>{formatKes(+subtotal)}</span>
                 </div>
 
                 <div className="py-3">
@@ -361,33 +362,33 @@ const ShoppingCart = () => {
                         <input
                           type="radio"
                           name="deli"
-                          value="YANGON"
-                          id="ygn"
-                          checked={deli === "YANGON"}
-                          onChange={() => setDeli("YANGON")}
+                          value="NAIROBI"
+                          id="nairobi"
+                          checked={deli === "NAIROBI"}
+                          onChange={() => setDeli("NAIROBI")}
                           // defaultChecked
                         />{" "}
-                        <label htmlFor="ygn" className="cursor-pointer">
-                          {t("within_yangon")}
+                        <label htmlFor="nairobi" className="cursor-pointer">
+                          {t("within_nairobi")}
                         </label>
                       </div>
-                      <span>$ 2.00</span>
+                      <span>{formatKes(siteConfig.delivery.nairobi)}</span>
                     </div>
                     <div className="flex justify-between">
                       <div>
                         <input
                           type="radio"
                           name="deli"
-                          value="OTHERS"
+                          value="OUTSIDE_NAIROBI"
                           id="others"
-                          checked={deli === "OTHERS"}
-                          onChange={() => setDeli("OTHERS")}
+                          checked={deli === "OUTSIDE_NAIROBI"}
+                          onChange={() => setDeli("OUTSIDE_NAIROBI")}
                         />{" "}
                         <label htmlFor="others" className="cursor-pointer">
-                          {t("other_cities")}
+                          {t("outside_nairobi")}
                         </label>
                       </div>
-                      <span>$ 7.00</span>
+                      <span>{formatKes(siteConfig.delivery.outsideNairobi)}</span>
                     </div>
                   </div>
                 </div>
@@ -395,7 +396,7 @@ const ShoppingCart = () => {
                 <div>
                   <div className="flex justify-between py-3">
                     <span>{t("grand_total")}</span>
-                    <span>$ {roundDecimal(+subtotal + deliFee)}</span>
+                    <span>{formatKes(+subtotal + deliFee)}</span>
                   </div>
 
                   <div className="grid gap-4 mt-2 mb-4">
@@ -443,23 +444,23 @@ const ShoppingCart = () => {
                       className="relative flex flex-col bg-white p-5 rounded-lg shadow-md border border-gray300 cursor-pointer"
                     >
                       <span className="font-semibold text-gray-500 leading-tight capitalize">
-                        {t("bank_transfer")}
+                        {t("mpesa")}
                       </span>
                       <span className="text-gray400 text-sm mt-1">
-                        {t("bank_transfer_desc")}
+                        {t("mpesa_desc")}
                       </span>
                       <input
                         type="radio"
                         name="plan"
                         id="plan-bank"
-                        value="BANK_TRANSFER"
+                        value="MPESA"
                         className="absolute h-0 w-0 appearance-none"
-                        onChange={() => setPaymentMethod("BANK_TRANSFER")}
+                        onChange={() => setPaymentMethod("MPESA")}
                       />
                       <span
                         aria-hidden="true"
                         className={`${
-                          paymentMethod === "BANK_TRANSFER" ? "block" : "hidden"
+                          paymentMethod === "MPESA" ? "block" : "hidden"
                         } absolute inset-0 border-2 border-gray500 bg-opacity-10 rounded-lg`}
                       >
                         <span className="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-gray100">
@@ -573,7 +574,7 @@ const ShoppingCart = () => {
                   <div className="pt-2 flex justify-between mb-2">
                     <span className="text-base uppercase">{t("total")}</span>
                     <span className="text-base">
-                      $ {completedOrder.totalPrice}
+                      {formatKes(completedOrder.totalPrice)}
                     </span>
                   </div>
                 </div>
@@ -582,8 +583,7 @@ const ShoppingCart = () => {
               <div className="h-full w-full md:w-1/2 md:ml-8 mt-4 md:mt-2 lg:mt-4">
                 <div>
                   {t("your_order_received")}
-                  {completedOrder.paymentType === "BANK_TRANSFER" &&
-                    t("bank_transfer_note")}
+                  {completedOrder.paymentType === "MPESA" && t("mpesa_note")}
                   {completedOrder.paymentType === "CASH_ON_DELIVERY" &&
                     completedOrder.deliveryType !== "STORE_PICKUP" &&
                     t("cash_delivery_note")}
@@ -592,33 +592,18 @@ const ShoppingCart = () => {
                   {t("thank_you_for_purchasing")}
                 </div>
 
-                {completedOrder.paymentType === "BANK_TRANSFER" ? (
+                {completedOrder.paymentType === "MPESA" ? (
                   <div className="mt-6">
-                    <h2 className="text-xl font-bold">
-                      {t("our_banking_details")}
-                    </h2>
-                    <span className="uppercase block my-1">Sat Naing :</span>
-
-                    <div className="flex justify-between w-full xl:w-1/2">
-                      <span className="text-sm font-bold">AYA Bank</span>
-                      <span className="text-base">20012345678</span>
-                    </div>
-                    <div className="flex justify-between w-full xl:w-1/2">
-                      <span className="text-sm font-bold">CB Bank</span>
-                      <span className="text-base">0010123456780959</span>
-                    </div>
-                    <div className="flex justify-between w-full xl:w-1/2">
-                      <span className="text-sm font-bold">KPay</span>
-                      <span className="text-base">095096051</span>
-                    </div>
+                    <h2 className="text-xl font-bold">{t("mpesa")}</h2>
+                    <p className="text-gray400">{t("mpesa_note")}</p>
                   </div>
                 ) : (
                   <div className="flex justify-center items-center h-56">
                     <div className="w-3/4">
                       <Image
                         className="justify-center"
-                        src="/logo.svg"
-                        alt="Haru Fashion"
+                        src="/STYLEALTRALOGO.png"
+                        alt="StyleAltra"
                         width={220}
                         height={50}
                         layout="responsive"

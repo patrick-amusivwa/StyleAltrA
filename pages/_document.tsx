@@ -1,9 +1,9 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { siteConfig } from "../data/siteConfig";
 
-const title = "Haru Fashion";
-const desc =
-  "Haru Fashion e-commerce developed with Next.JS. Coded with 🖤 by Sat Naing (satnaing.dev).";
-const keywords = "Haru Fashion, Online Shop, E-commerce, Sat Naing, NextJS";
+const title = siteConfig.name;
+const desc = siteConfig.description;
+const keywords = siteConfig.keywords;
 
 export default function Document() {
   return (
@@ -38,17 +38,17 @@ export default function Document() {
         <link href="/favicons/favicon.ico" rel="shortcut icon" />
         <link href="/favicons/site.webmanifest" rel="manifest" />
 
-        <meta property="og:url" content="https://haru-fashion.vercel.app" />
-        <link rel="canonical" href="https://haru-fashion.vercel.app" />
-        <meta property="og:site_name" content="Haru Fashion" />
+        <meta property="og:url" content={siteConfig.canonicalUrl} />
+        <link rel="canonical" href={siteConfig.canonicalUrl} />
+        <meta property="og:site_name" content={siteConfig.name} />
         <meta property="og:description" content={desc} key="og_description" />
         <meta property="og:title" content={title} key="og_title" />
         <meta
           property="og:image"
-          content="https://haru-fashion.vercel.app/og.png"
+          content={`${siteConfig.canonicalUrl}/STYLEALTRALOGO.png`}
         />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@satnaing.dev" />
+        <meta name="twitter:site" content="@StyleAltra" />
         <meta name="twitter:title" content={title} key="twitter_title" />
         <meta
           name="twitter:description"
@@ -57,7 +57,7 @@ export default function Document() {
         />
         <meta
           name="twitter:image"
-          content="https://haru-fashion.vercel.app/og.png"
+          content={`${siteConfig.canonicalUrl}/STYLEALTRALOGO.png`}
         />
 
         <meta name="apple-mobile-web-app-capable" content="yes" />

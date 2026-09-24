@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import { siteConfig } from "../../data/siteConfig";
 
 type Props = {
   title?: string;
@@ -7,14 +8,11 @@ type Props = {
   keywords?: string;
 };
 
-// "Discover affordable and fashionable men's and women's clothing online at Haru Fashion. Free Returns ✓ 1000+ New Arrivals Dropped Daily."
-const defaultDesc =
-  "Haru Fashion e-commerce developed with Next.JS. Coded with 🖤 by Sat Naing (satnaing.dev).";
-const defaultKeywords =
-  "Haru Fashion, Online Shop, E-commerce, Sat Naing, NextJS";
+const defaultDesc = siteConfig.description;
+const defaultKeywords = siteConfig.keywords;
 
 const AppHeader: React.FC<Props> = ({
-  title = "Haru Fashion",
+  title = siteConfig.name,
   desc = defaultDesc,
   keywords = defaultKeywords,
 }) => {

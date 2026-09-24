@@ -4,9 +4,9 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Haru Fashion ",
-  "short_name": "Haru",
-  "description": "Discover affordable and fashionable men's and women's clothing online at Haru Fashion",
+  "name": "StyleAltra",
+  "short_name": "StyleAltra",
+  "description": "Kenyan fashion for everyday style, from Nairobi and beyond.",
   "icons": [
     {
       "src": "/icon-192x192.png",

@@ -10,6 +10,7 @@ import Button from "../components/Buttons/Button";
 import GhostButton from "../components/Buttons/GhostButton";
 import { useCart } from "../context/cart/CartProvider";
 import { useWishlist } from "../context/wishlist/WishlistProvider";
+import { formatKes } from "../components/Util/utilFunc";
 
 // let w = window.innerWidth;
 
@@ -23,7 +24,7 @@ const Wishlist = () => {
   return (
     <div>
       {/* ===== Head Section ===== */}
-      <Header title={`Wishlist - Haru Fashion`} />
+      <Header title={`Wishlist - StyleAltra`} />
 
       <main id="main-content">
         {/* ===== Heading & Continue Shopping */}
@@ -104,7 +105,7 @@ const Wishlist = () => {
                           {item.name}
                         </td>
                         <td className="text-right text-gray400">
-                          $ {item.price}
+                          {formatKes(item.price)}
                         </td>
                         <td className="text-center hidden sm:table-cell max-w-xs text-gray400">
                           <Button

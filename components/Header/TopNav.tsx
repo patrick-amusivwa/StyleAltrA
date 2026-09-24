@@ -45,12 +45,12 @@ const TopNav = () => {
       <div className="flex justify-between app-max-width">
         <ul className={`flex ${styles.topLeftMenu}`}>
           <li>
-            <a href="#" aria-label="Haru Fashion Facebook Page">
+            <a href="#" aria-label="StyleAltra Facebook Page">
               <FacebookLogo />
             </a>
           </li>
           <li>
-            <a href="#" aria-label="Haru Fashion Instagram Account">
+            <a href="#" aria-label="StyleAltra Instagram Account">
               <InstagramLogo />
             </a>
           </li>
@@ -62,36 +62,11 @@ const TopNav = () => {
           </li>
         </ul>
         <ul className={`flex ${styles.topRightMenu}`}>
+          <li className="flex items-center px-2">{t("english")}</li>
           <li>
             <Menu as="div" className="relative">
               <Menu.Button as="a" href="#" className="flex">
-                {locale === "en" ? t("eng") : t("myn")} <DownArrow />
-              </Menu.Button>
-              <Menu.Items
-                className="flex flex-col w-20 right-0 absolute p-1 border border-gray200 bg-white mt-2 outline-none"
-                style={{ zIndex: 9999 }}
-              >
-                <Menu.Item>
-                  {({ active }) => (
-                    <MyLink active={active} href={asPath} locale="en">
-                      {t("eng")}
-                    </MyLink>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <MyLink active={active} href={asPath} locale="my">
-                      {t("myn")}
-                    </MyLink>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Menu>
-          </li>
-          <li>
-            <Menu as="div" className="relative">
-              <Menu.Button as="a" href="#" className="flex">
-                {t("usd")} <DownArrow />
+                KES <DownArrow />
               </Menu.Button>
               <Menu.Items
                 className="flex flex-col w-20 right-0 absolute p-1 border border-gray200 bg-white mt-2 outline-none"
@@ -121,7 +96,7 @@ const TopNav = () => {
                           : "bg-white text-gray500"
                       } py-2 px-4 text-center focus:outline-none`}
                     >
-                      {t("mmk")}
+                      KES
                     </a>
                   )}
                 </Menu.Item>

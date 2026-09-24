@@ -6,7 +6,7 @@ import BagIcon from "../../public/icons/BagIcon";
 import Button from "../Buttons/Button";
 import Item from "./Item";
 import LinkButton from "../Buttons/LinkButton";
-import { roundDecimal } from "../Util/utilFunc";
+import { formatKes } from "../Util/utilFunc";
 import { useCart } from "../../context/cart/CartProvider";
 import { useRouter } from "next/router";
 
@@ -138,7 +138,7 @@ export default function CartItem() {
                   <div className="btnContainer mt-4 px-4 h-1/3 mb-20 w-full flex flex-col ">
                     <div className="flex justify-between">
                       <span>{t("subtotal")}</span>
-                      <span>$ {roundDecimal(subtotal)}</span>
+                      <span>{formatKes(subtotal)}</span>
                     </div>
                     <LinkButton
                       href="/shopping-cart"

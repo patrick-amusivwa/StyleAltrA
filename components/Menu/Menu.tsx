@@ -90,8 +90,8 @@ export default function Menu() {
                     <a>
                       <Image
                         className="justify-center"
-                        src="/logo.svg"
-                        alt="Picture of the author"
+                        src="/STYLEALTRALOGO.png"
+                        alt="StyleAltra"
                         width={85}
                         height={22}
                       />
@@ -193,51 +193,9 @@ export default function Menu() {
                     </Link>
                     <hr className="border border-gray300 w-full" />
 
-                    {/* Locale Dropdown */}
-                    <HMenu
-                      as="div"
-                      className="relative bg-gray100 mt-4 mb-2 w-full"
-                    >
-                      <HMenu.Button
-                        as="a"
-                        href="#"
-                        className="flex justify-center items-center py-2 px-4 text-center"
-                      >
-                        {locale === "en" ? t("english") : t("myanmar")}{" "}
-                        <DownArrow />
-                      </HMenu.Button>
-                      <HMenu.Items
-                        className="flex flex-col w-full right-0 absolute p-1 border border-gray200 bg-white mt-2 outline-none"
-                        style={{ zIndex: 9999 }}
-                      >
-                        <HMenu.Item>
-                          <Link href={asPath} locale="en">
-                            <a
-                              className={`${
-                                locale === "en"
-                                  ? "bg-gray200 text-gray500"
-                                  : "bg-white text-gray500"
-                              } py-2 px-4 text-center focus:outline-none`}
-                            >
-                              {t("english")}
-                            </a>
-                          </Link>
-                        </HMenu.Item>
-                        <HMenu.Item>
-                          <Link href={asPath} locale="my">
-                            <a
-                              className={`${
-                                locale === "my"
-                                  ? "bg-gray200 text-gray500"
-                                  : "bg-white text-gray500"
-                              } py-2 px-4 text-center focus:outline-none`}
-                            >
-                              {t("myanmar")}
-                            </a>
-                          </Link>
-                        </HMenu.Item>
-                      </HMenu.Items>
-                    </HMenu>
+                    <div className="bg-gray100 mt-4 mb-2 w-full py-2 px-4 text-center">
+                      {t("english")}
+                    </div>
 
                     {/* Currency Dropdown */}
                     <HMenu as="div" className="relative bg-gray100 my-2 w-full">
@@ -246,7 +204,7 @@ export default function Menu() {
                         href="#"
                         className="flex justify-center items-center py-2 px-4 text-center"
                       >
-                        {t("usd")} <DownArrow />
+                        KES <DownArrow />
                       </HMenu.Button>
                       <HMenu.Items
                         className="flex flex-col w-full right-0 absolute p-1 border border-gray200 bg-white mt-2 outline-none"
@@ -262,7 +220,7 @@ export default function Menu() {
                                   : "bg-white text-gray500"
                               } py-2 px-4 text-center focus:outline-none`}
                             >
-                              {t("usd")}
+                              KES
                             </a>
                           )}
                         </HMenu.Item>
@@ -276,7 +234,7 @@ export default function Menu() {
                                   : "bg-white text-gray500"
                               } py-2 px-4 text-center focus:outline-none`}
                             >
-                              {t("mmk")}
+                              KES
                             </a>
                           )}
                         </HMenu.Item>
@@ -287,14 +245,14 @@ export default function Menu() {
                       <a
                         href="#"
                         className="text-gray400 w-10 h-10 py-1 px-auto flex justify-center rounded-md active:bg-gray300"
-                        aria-label="Haru Fashion Facebook Page"
+                        aria-label="StyleAltra Facebook Page"
                       >
                         <FacebookLogo extraClass="h-8" />
                       </a>
                       <a
                         href="#"
                         className="text-gray400 w-10 h-10 py-1 px-auto flex justify-center rounded-md active:bg-gray300"
-                        aria-label="Haru Fashion Facebook Page"
+                        aria-label="StyleAltra Instagram Account"
                       >
                         <InstagramLogo extraClass="h-8" />
                       </a>

@@ -116,15 +116,15 @@ const Header: React.FC<Props> = ({ title }) => {
               </li>
             </ul>
 
-            {/* Haru Logo */}
+            {/* StyleAltra Logo */}
             <div className="flex-1 flex justify-center items-center cursor-pointer">
               <div className="w-32 h-auto">
                 <Link href="/">
                   <a>
                     <Image
                       className="justify-center"
-                      src="/logo.svg"
-                      alt="Picture of the author"
+                      src="/STYLEALTRALOGO.png"
+                      alt="StyleAltra"
                       width={220}
                       height={50}
                       layout="responsive"
