@@ -41,12 +41,18 @@ export default function Document() {
         <meta property="og:url" content={siteConfig.canonicalUrl} />
         <link rel="canonical" href={siteConfig.canonicalUrl} />
         <meta property="og:site_name" content={siteConfig.name} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_KE" />
         <meta property="og:description" content={desc} key="og_description" />
         <meta property="og:title" content={title} key="og_title" />
         <meta
           property="og:image"
           content={`${siteConfig.canonicalUrl}/STYLEALTRALOGO.png`}
         />
+        <meta property="og:image:width" content="527" />
+        <meta property="og:image:height" content="180" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="StyleAltra Kenyan fashion" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@StyleAltra" />
         <meta name="twitter:title" content={title} key="twitter_title" />
@@ -59,6 +65,7 @@ export default function Document() {
           name="twitter:image"
           content={`${siteConfig.canonicalUrl}/STYLEALTRALOGO.png`}
         />
+        <meta name="twitter:image:alt" content="StyleAltra Kenyan fashion" />
 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
