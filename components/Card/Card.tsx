@@ -39,8 +39,16 @@ const Card: FC<Props> = ({ item, imagePlaceholder = false }) => {
     <div className={styles.card}>
       <div className={styles.imageContainer}>
         {imagePlaceholder ? (
-          <div className="w-full aspect-[230/300]">
-            <Skeleton height="100%" width="100%" />
+          <div
+            className="w-full"
+            style={{ aspectRatio: "1 / 1" }}
+            aria-label="Loading product image"
+          >
+            <Skeleton
+              width="100%"
+              height="100%"
+              style={{ display: "block" }}
+            />
           </div>
         ) : (
           <Link href={itemLink}>
