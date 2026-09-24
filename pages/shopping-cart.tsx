@@ -242,7 +242,7 @@ const ShoppingCart = () => {
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
-      messages: (await import(`../messages/common/${locale}.json`)).default,
+      messages: (await import("../messages/common/en.json")).default,
     },
   };
 };

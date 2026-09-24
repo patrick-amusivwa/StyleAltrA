@@ -2,10 +2,6 @@ const withPWA = require("next-pwa");
 
 module.exports = withPWA({
   // module.exports = {
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
   reactStrictMode: true,
   // swcMinify: true,
   compiler: {
@@ -13,7 +9,10 @@ module.exports = withPWA({
   },
   images: {
     domains: ["robohash.org", "res.cloudinary.com"],
+    loader: "akamai",
+    path: "/",
   },
+  trailingSlash: true,
   pwa: {
     dest: "public",
     skipWaiting: true,

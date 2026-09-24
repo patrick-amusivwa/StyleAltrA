@@ -153,7 +153,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     props: {
       messages: {
         // ...require(`../messages/index/${locale}.json`),
-        ...require(`../messages/common/${locale}.json`),
+        ...require("../messages/common/en.json"),
       },
       products: products as itemType[],
     }, // will be passed to the page component as props

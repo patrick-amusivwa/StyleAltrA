@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { Menu } from "@headlessui/react";
 import { useTranslations } from "next-intl";
@@ -23,15 +23,22 @@ type Props = {
 
 const ProductCategory: React.FC<Props> = ({
   items,
-  page,
   numberOfProducts,
-  orderby,
 }) => {
   const t = useTranslations("Category");
 
   const router = useRouter();
   const { category } = router.query;
+  const page = Number(router.query.page) || 1;
+  const orderby = (router.query.orderby as OrderType) || "latest";
   const lastPage = Math.ceil(numberOfProducts / 10);
+
+  const sortedItems = [...items].sort((first, second) => {
+    if (orderby === "price") return first.price - second.price;
+    if (orderby === "price-desc") return second.price - first.price;
+    return (second.createdAt || "").localeCompare(first.createdAt || "");
+  });
+  const visibleItems = sortedItems.slice((page - 1) * 10, page * 10);
 
   const capitalizedCategory =
     category!.toString().charAt(0).toUpperCase() +
@@ -76,7 +83,7 @@ const ProductCategory: React.FC<Props> = ({
         {/* ===== Main Content Section ===== */}
         <div className="app-x-padding app-max-width mt-3 mb-14">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-10 sm:gap-y-6 mb-10">
-            {items.map((item) => (
+            {visibleItems.map((item) => (
               <Card
                 key={item.id}
                 item={item}
@@ -104,30 +111,24 @@ const ProductCategory: React.FC<Props> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  locale,
-  query: { page = 1, orderby = "latest" },
-}) => {
-  const paramCategory = params!.category as string;
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: ["new-arrivals", "women", "men", "bags"].map((category) => ({
+    params: { category },
+  })),
+  fallback: false,
+});
 
-  const start = +page === 1 ? 0 : (+page - 1) * 10;
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+  const paramCategory = params!.category as string;
   const categoryProducts = productsForCategory(paramCategory);
-  const sortedProducts = [...categoryProducts].sort((first, second) => {
-    if (orderby === "price") return first.price - second.price;
-    if (orderby === "price-desc") return second.price - first.price;
-    return (second.createdAt || "").localeCompare(first.createdAt || "");
-  });
-  const numberOfProducts = sortedProducts.length;
-  const items: itemType[] = sortedProducts.slice(start, start + 10).map(toItem);
+  const items: itemType[] = categoryProducts.map(toItem);
+  const numberOfProducts = items.length;
 
   return {
     props: {
-      messages: (await import(`../../messages/common/${locale}.json`)).default,
+      messages: (await import("../../messages/common/en.json")).default,
       items,
       numberOfProducts,
-      page: +page,
-      orderby,
     },
   };
 };

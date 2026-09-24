@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
@@ -313,7 +313,14 @@ const Product: React.FC<Props> = ({ product, products }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: catalogProducts.map((product) => ({
+    params: { id: String(product.id) },
+  })),
+  fallback: false,
+});
+
+export const getStaticProps: GetStaticProps = async ({
   params,
   locale,
 }) => {
@@ -336,20 +343,14 @@ export const getServerSideProps: GetServerSideProps = async ({
     (candidate) => candidate.categoryName === product.categoryName && candidate.id !== product.id
   );
 
-  // Shuffle array
-  const shuffled = fetchedProducts.sort(() => 0.5 - Math.random());
-
-  // Get sub-array of first 5 elements after shuffled
-  let randomFetchedProducts = shuffled.slice(0, 5);
-
-  const products = randomFetchedProducts.map(toItem);
+  const products = fetchedProducts.slice(0, 5).map(toItem);
 
   // Pass data to the page via props
   return {
     props: {
       product,
       products,
-      messages: (await import(`../../messages/common/${locale}.json`)).default,
+      messages: (await import("../../messages/common/en.json")).default,
     },
   };
 };

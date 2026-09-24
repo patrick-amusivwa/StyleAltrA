@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -13,12 +12,13 @@ import { itemType } from "../context/cart/cart-types";
 import { searchProducts, toItem } from "../data/localCatalog";
 
 type Props = {
-  items: itemType[];
-  searchWord: string;
 };
 
-const Search: React.FC<Props> = ({ items, searchWord }) => {
+const Search: React.FC<Props> = () => {
   const t = useTranslations("Search");
+  const router = useRouter();
+  const searchWord = (router.query.q as string) || "";
+  const items: itemType[] = searchProducts(searchWord).map(toItem);
 
   return (
     <div>
@@ -76,17 +76,10 @@ const Search: React.FC<Props> = ({ items, searchWord }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  locale,
-  query: { q = "" },
-}) => {
-  const items: itemType[] = searchProducts(q as string).map(toItem);
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
-      messages: (await import(`../messages/common/${locale}.json`)).default,
-      items,
-      searchWord: q,
+      messages: (await import("../messages/common/en.json")).default,
     },
   };
 };

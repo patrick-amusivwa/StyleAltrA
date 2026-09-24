@@ -31,7 +31,7 @@ type AppCustomProps = {
 
 const MyApp = ({ Component, pageProps }: AppCustomProps) => {
   return (
-    <NextIntlProvider messages={pageProps?.messages}>
+    <NextIntlProvider locale="en" messages={pageProps?.messages}>
       <ProvideAuth>
         <ProvideWishlist>
           <ProvideCart>
