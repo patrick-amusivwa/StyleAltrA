@@ -9,10 +9,7 @@ module.exports = withPWA({
   },
   images: {
     domains: ["robohash.org", "res.cloudinary.com"],
-    loader: "akamai",
-    path: "/",
   },
-  trailingSlash: true,
   pwa: {
     dest: "public",
     skipWaiting: true,
