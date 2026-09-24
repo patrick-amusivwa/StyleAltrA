@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import axios from "axios";
 
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
@@ -11,8 +10,9 @@ import Slideshow from "../components/HeroSection/Slideshow";
 import OverlayContainer from "../components/OverlayContainer/OverlayContainer";
 import Card from "../components/Card/Card";
 import TestiSlider from "../components/TestiSlider/TestiSlider";
-import { apiProductsType, itemType } from "../context/cart/cart-types";
+import { itemType } from "../context/cart/cart-types";
 import LinkButton from "../components/Buttons/LinkButton";
+import { products } from "../data/localCatalog";
 
 // /bg-img/ourshop.png
 import ourShop from "../public/bg-img/ourshop.png";
@@ -23,31 +23,14 @@ type Props = {
 
 const Home: React.FC<Props> = ({ products }) => {
   const t = useTranslations("Index");
-  const [currentItems, setCurrentItems] = useState(products);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    if (!isFetching) return;
-    const fetchData = async () => {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_PROD_BACKEND_URL}/api/v1/products?order_by=createdAt.desc&offset=${currentItems.length}&limit=10`
-      );
-      const fetchedProducts = res.data.data.map((product: apiProductsType) => ({
-        ...product,
-        img1: product.image1,
-        img2: product.image2,
-      }));
-      setCurrentItems((products) => [...products, ...fetchedProducts]);
-      setIsFetching(false);
-    };
-    fetchData();
-  }, [isFetching, currentItems.length]);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const currentItems = products.slice(0, visibleCount);
 
   const handleSeemore = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    setIsFetching(true);
+    setVisibleCount((count) => Math.min(count + 10, products.length));
   };
 
   return (
@@ -139,7 +122,7 @@ const Home: React.FC<Props> = ({ products }) => {
           </div>
           <div className="flex justify-center">
             <Button
-              value={!isFetching ? t("see_more") : t("loading")}
+              value={t("see_more")}
               onClick={handleSeemore}
             />
           </div>
@@ -166,30 +149,13 @@ const Home: React.FC<Props> = ({ products }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  let products: itemType[] = [];
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products?order_by=createdAt.desc&limit=10`
-  );
-  const fetchedProducts = res.data;
-  fetchedProducts.data.forEach((product: apiProductsType) => {
-    products = [
-      ...products,
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        img1: product.image1,
-        img2: product.image2,
-      },
-    ];
-  });
   return {
     props: {
       messages: {
         // ...require(`../messages/index/${locale}.json`),
         ...require(`../messages/common/${locale}.json`),
       },
-      products,
+      products: products as itemType[],
     }, // will be passed to the page component as props
   };
 };

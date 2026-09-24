@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
 import { useTranslations } from "next-intl";
-import axios from "axios";
 
 import Heart from "../../public/icons/Heart";
 import DownArrow from "../../public/icons/DownArrow";
@@ -22,6 +21,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // import Swiper core and required modules
 import SwiperCore, { Pagination } from "swiper/core";
 import { apiProductsType, itemType } from "../../context/cart/cart-types";
+import {
+  findProduct,
+  products as catalogProducts,
+  toItem,
+} from "../../data/localCatalog";
 import { useWishlist } from "../../context/wishlist/WishlistProvider";
 import { useCart } from "../../context/cart/CartProvider";
 import HeartSolid from "../../public/icons/HeartSolid";
@@ -310,10 +314,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   locale,
 }) => {
   const paramId = params!.id as string;
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products/${paramId}?include=category`
-  );
-  const fetchedProduct: apiProductsType = res.data.data;
+  const fetchedProduct = findProduct(paramId);
+  if (!fetchedProduct) return { notFound: true };
 
   let product: itemType = {
     id: fetchedProduct.id,
@@ -322,14 +324,13 @@ export const getServerSideProps: GetServerSideProps = async ({
     detail: fetchedProduct.detail,
     img1: fetchedProduct.image1,
     img2: fetchedProduct.image2,
-    categoryName: fetchedProduct!.category!.name,
+    categoryName: fetchedProduct.categoryName,
   };
 
   // Might be temporary solution for suggested products
-  const randomProductRes = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products?category=${product.categoryName}`
+  const fetchedProducts = catalogProducts.filter(
+    (candidate) => candidate.categoryName === product.categoryName && candidate.id !== product.id
   );
-  const fetchedProducts: apiProductsType[] = randomProductRes.data.data;
 
   // Shuffle array
   const shuffled = fetchedProducts.sort(() => 0.5 - Math.random());
@@ -337,16 +338,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   // Get sub-array of first 5 elements after shuffled
   let randomFetchedProducts = shuffled.slice(0, 5);
 
-  let products: itemType[] = [];
-  randomFetchedProducts.forEach((randomProduct: apiProductsType) => {
-    products.push({
-      id: randomProduct.id,
-      name: randomProduct.name,
-      price: randomProduct.price,
-      img1: randomProduct.image1,
-      img2: randomProduct.image2,
-    });
-  });
+  const products = randomFetchedProducts.map(toItem);
 
   // Pass data to the page via props
   return {

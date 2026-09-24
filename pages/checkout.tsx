@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import axios from "axios";
 import Image from "next/image";
 import { GetStaticProps } from "next";
 
@@ -86,26 +85,20 @@ const ShoppingCart = () => {
     if (!auth.user) registerUser();
 
     const makeOrder = async () => {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`,
-        {
-          customerId: auth!.user!.id,
-          shippingAddress: shippingAddress ? shippingAddress : address,
-          totalPrice: subtotal,
-          deliveryDate: new Date().setDate(new Date().getDate() + 7),
-          paymentType: paymentMethod,
-          deliveryType: deli,
-          products,
-          sendEmail,
-        }
-      );
-      if (res.data.success) {
-        setCompletedOrder(res.data.data);
-        clearCart!();
-        setIsOrdering(false);
-      } else {
-        setOrderError("error_occurs");
-      }
+      setCompletedOrder({
+        orderNumber: Date.now(),
+        customerId: auth.user!.id,
+        shippingAddress: shippingAddress || address,
+        orderDate: new Date().toISOString(),
+        paymentType: paymentMethod,
+        deliveryType: deli,
+        totalPrice: +subtotal,
+        deliveryDate: new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+      });
+      clearCart!();
+      setIsOrdering(false);
     };
     if (auth.user) makeOrder();
   }, [isOrdering, completedOrder, auth.user]);

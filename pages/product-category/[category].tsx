@@ -1,5 +1,4 @@
 import Link from "next/link";
-import axios from "axios";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { Menu } from "@headlessui/react";
@@ -9,7 +8,8 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Card from "../../components/Card/Card";
 import Pagination from "../../components/Util/Pagination";
-import { apiProductsType, itemType } from "../../context/cart/cart-types";
+import { itemType } from "../../context/cart/cart-types";
+import { productsForCategory, toItem } from "../../data/localCatalog";
 import DownArrow from "../../public/icons/DownArrow";
 
 type OrderType = "latest" | "price" | "price-desc";
@@ -104,45 +104,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   const paramCategory = params!.category as string;
 
   const start = +page === 1 ? 0 : (+page - 1) * 10;
-
-  let numberOfProducts = 0;
-
-  if (paramCategory !== "new-arrivals") {
-    const numberOfProductsResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products/count?category=${paramCategory}`
-    );
-    numberOfProducts = +numberOfProductsResponse.data.count;
-  } else {
-    numberOfProducts = 10;
-  }
-
-  let order_by: string;
-
-  if (orderby === "price") {
-    order_by = "price";
-  } else if (orderby === "price-desc") {
-    order_by = "price.desc";
-  } else {
-    order_by = "createdAt.desc";
-  }
-
-  const reqUrl =
-    paramCategory === "new-arrivals"
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products?order_by=createdAt.desc&limit=10`
-      : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/products?order_by=${order_by}&offset=${start}&limit=10&category=${paramCategory}`;
-
-  const res = await axios.get(reqUrl);
-
-  const fetchedProducts = res.data.data.map((product: apiProductsType) => ({
-    ...product,
-    img1: product.image1,
-    img2: product.image2,
-  }));
-
-  let items: apiProductsType[] = [];
-  fetchedProducts.forEach((product: apiProductsType) => {
-    items.push(product);
+  const categoryProducts = productsForCategory(paramCategory);
+  const sortedProducts = [...categoryProducts].sort((first, second) => {
+    if (orderby === "price") return first.price - second.price;
+    if (orderby === "price-desc") return second.price - first.price;
+    return (second.createdAt || "").localeCompare(first.createdAt || "");
   });
+  const numberOfProducts = sortedProducts.length;
+  const items: itemType[] = sortedProducts.slice(start, start + 10).map(toItem);
 
   return {
     props: {

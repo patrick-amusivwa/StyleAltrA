@@ -36,6 +36,9 @@ export interface itemType extends commonType {
 export interface apiProductsType extends commonType {
   image1?: string;
   image2?: string;
+  img1?: string;
+  img2?: string;
+  categoryName?: string;
 }
 
 export type cartFuncType = (item: itemType) => void;

@@ -3,9 +3,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useTranslations } from "next-intl";
 
 import SearchIcon from "../../public/icons/SearchIcon";
-import axios from "axios";
-import { apiProductsType } from "../../context/cart/cart-types";
 import { itemType } from "../../context/wishlist/wishlist-type";
+import { searchProducts, toItem } from "../../data/localCatalog";
 import Card from "../Card/Card";
 import Loading from "../../public/icons/Loading";
 import GhostButton from "../Buttons/GhostButton";
@@ -35,24 +34,10 @@ export default function SearchForm() {
   useEffect(() => {
     if (!isFetching) return;
     const fetchData = async () => {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_PROD_BACKEND_URL}/api/v1/products/search?q=${searchValue}`
-      );
-      const fetchedProducts: apiProductsType[] = res.data.data.map(
-        (product: apiProductsType) => ({
-          ...product,
-          img1: product.image1,
-          img2: product.image2,
-        })
-      );
+      const fetchedProducts = searchProducts(searchValue).map(toItem);
       if (fetchedProducts.length < 1) setNoResult(true);
-      fetchedProducts.map((product, index) => {
-        if (index < 4) {
-          setSearchItems((prevProduct) => [...prevProduct, product]);
-        } else {
-          setMoreThanFour(true);
-        }
-      });
+      setSearchItems(fetchedProducts.slice(0, 4));
+      setMoreThanFour(fetchedProducts.length > 4);
       setIsFetching(false);
     };
     fetchData();

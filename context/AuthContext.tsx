@@ -1,4 +1,3 @@
-import axios from "axios";
 import { getCookie, removeCookies, setCookies } from "cookies-next";
 import React, { useState, useEffect, useContext, createContext } from "react";
 
@@ -43,6 +42,8 @@ type User = {
   token: string;
 };
 
+const localUsers: Array<User & { password: string }> = [];
+
 // Provider component that wraps your app and makes auth object ...
 // ... available to any child component that calls useAuth().
 export function ProvideAuth({ children }: { children: React.ReactNode }) {
@@ -78,98 +79,40 @@ function useProvideAuth() {
     shippingAddress: string,
     phone: string
   ) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
-        {
-          email,
-          fullname,
-          password,
-          shippingAddress,
-          phone,
-        }
-      );
-      const registerResponse = response.data;
-      const user: User = {
-        id: +registerResponse.id,
+    if (localUsers.some((existingUser) => existingUser.email === email)) {
+      return { success: false, message: "alreadyExists" };
+    }
+
+    const user: User = {
+        id: localUsers.length + 1,
         email,
         fullname,
         shippingAddress,
         phone,
-        token: registerResponse.token,
+        token: `local-token-${Date.now()}`,
       };
-      setUser(user);
-      return {
-        success: true,
-        message: "register_successful",
-      };
-    } catch (err) {
-      const errResponse = (err as any).response.data;
-      let errorMessage: string;
-      if (errResponse.error.type === "alreadyExists") {
-        errorMessage = errResponse.error.type;
-      } else {
-        errorMessage = errResponse.error.detail.message;
-      }
-      return {
-        success: false,
-        message: errorMessage,
-      };
-    }
+    localUsers.push({ ...user, password });
+    setUser(user);
+    return { success: true, message: "register_successful" };
   };
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
-        {
-          email,
-          password,
-        }
-      );
-      const loginResponse = response.data;
-      const user: User = {
-        id: +loginResponse.data.id,
-        email,
-        fullname: loginResponse.data.fullname,
-        phone: loginResponse.data.phone,
-        shippingAddress: loginResponse.data.shippingAddress,
-        token: loginResponse.token,
-      };
-      setUser(user);
-      return {
-        success: true,
-        message: "login_successful",
-      };
-    } catch (err) {
-      return {
-        success: false,
-        message: "incorrect",
-      };
-    }
+    const existingUser = localUsers.find(
+      (localUser) => localUser.email === email && localUser.password === password
+    );
+    if (!existingUser) return { success: false, message: "incorrect" };
+
+    const { password: _password, ...user } = existingUser;
+    setUser(user);
+    return { success: true, message: "login_successful" };
   };
 
   const forgotPassword = async (email: string) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/forgot-password`,
-        {
-          email,
-        }
-      );
-      const forgotPasswordResponse = response.data;
-      setUser(user);
-      return {
-        success: forgotPasswordResponse.success,
-        message: "reset_email_sent",
-      };
-    } catch (err) {
-      console.log(err);
-      return {
-        success: false,
-        message: "something_went_wrong",
-      };
-    }
+    const existingUser = localUsers.some((localUser) => localUser.email === email);
+    return {
+      success: existingUser,
+      message: existingUser ? "reset_email_sent" : "something_went_wrong",
+    };
   };
 
   const logout = () => {

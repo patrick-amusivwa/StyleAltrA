@@ -9,8 +9,8 @@ import Footer from "../components/Footer/Footer";
 import Card from "../components/Card/Card";
 import Pagination from "../components/Util/Pagination";
 import useWindowSize from "../components/Util/useWindowSize";
-import { apiProductsType, itemType } from "../context/cart/cart-types";
-import axios from "axios";
+import { itemType } from "../context/cart/cart-types";
+import { searchProducts, toItem } from "../data/localCatalog";
 
 type Props = {
   items: itemType[];
@@ -80,21 +80,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   locale,
   query: { q = "" },
 }) => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_PROD_BACKEND_URL}/api/v1/products/search?q=${q}`
-  );
-  const fetchedProducts: apiProductsType[] = res.data.data.map(
-    (product: apiProductsType) => ({
-      ...product,
-      img1: product.image1,
-      img2: product.image2,
-    })
-  );
-
-  let items: apiProductsType[] = [];
-  fetchedProducts.forEach((product: apiProductsType) => {
-    items.push(product);
-  });
+  const items: itemType[] = searchProducts(q as string).map(toItem);
 
   return {
     props: {
