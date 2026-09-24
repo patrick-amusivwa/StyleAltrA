@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { siteConfig } from "../../data/siteConfig";
 
 type Props = {
@@ -16,12 +17,16 @@ const AppHeader: React.FC<Props> = ({
   desc = defaultDesc,
   keywords = defaultKeywords,
 }) => {
+  const router = useRouter();
+  const pageUrl = `${siteConfig.canonicalUrl}${router.asPath}`;
+
   return (
     <Head>
       <title>{title}</title>
 
       <meta content={desc} name="description" key="description" />
       <meta content={keywords} name="keywords" key="keywords" />
+      <meta property="og:url" content={pageUrl} key="og_url" />
       <meta property="og:type" content="website" key="og_type" />
       <meta property="og:site_name" content={siteConfig.name} key="og_site_name" />
       <meta
@@ -39,6 +44,7 @@ const AppHeader: React.FC<Props> = ({
       />
       <meta property="og:description" content={desc} key="og_description" />
       <meta property="og:title" content={title} key="og_title" />
+      <meta name="twitter:site" content="@StyleAltra" key="twitter_site" />
       <meta name="twitter:card" content="summary_large_image" key="twitter_card" />
       <meta
         name="twitter:image"
