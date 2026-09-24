@@ -2,6 +2,7 @@ import { NextComponentType, NextPageContext } from "next";
 import Router from "next/router";
 import NProgress from "nprogress";
 import { NextIntlProvider } from "next-intl";
+import { Analytics } from "@vercel/analytics/react";
 
 import { ProvideCart } from "../context/cart/CartProvider";
 import { ProvideWishlist } from "../context/wishlist/WishlistProvider";
@@ -36,6 +37,7 @@ const MyApp = ({ Component, pageProps }: AppCustomProps) => {
         <ProvideWishlist>
           <ProvideCart>
             <Component {...pageProps} />
+            <Analytics />
           </ProvideCart>
         </ProvideWishlist>
       </ProvideAuth>
